@@ -62,7 +62,7 @@ pip install -r requirements.txt
 
 ## ▶️ Ejecución
 
-Ejecuta el pipeline completo con el siguiente comando(si no se pone el argumento output, se guardara automaticamente en outputCSV):
+Ejecuta el pipeline completo con el siguiente comando(las rutas son los argumentos)(si no se pone el argumento output, se guardara automaticamente en outputCSV):
 
 ```bash
 python run_all.py --video ./Videos3Corredores/v14.mp4 --rutacsv ./inputCSV/datos_corredores.csv --output ./aquiResultado.csv
@@ -121,9 +121,9 @@ fotosCapturadas/persona_6_tiempo_5:13s.jpg
 
 Mira este breve video donde se muestra en acción el sistema de detección, captura y OCR:
 
-[🔗 Ver en YouTube](https://youtu.be/yAxhWeii_Tg)
+[🔗 Ver en YouTube](https://youtu.be/wpGPRjsCoos)
 
-[![Ver video](https://img.youtube.com/vi/yAxhWeii_Tg/0.jpg)](https://youtu.be/yAxhWeii_Tg)
+[![Ver video](https://img.youtube.com/vi/yAxhWeii_Tg/0.jpg)](https://youtu.be/wpGPRjsCoos)
 
 ---
 
