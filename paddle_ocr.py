@@ -1,4 +1,5 @@
 import json
+import csv
 import re
 import os
 import cv2
@@ -61,7 +62,7 @@ def extract_time_from_filename(filename):
     return None
 
 ##Guardar en un json
-def guardar_diccionario_json(diccionario, nombre_archivo="dorsales_y_tiempos.json", carpeta_salida="."):
+def guardar_diccionario_json(diccionario, nombre_archivo="dorsales_y_tiempos.json", carpeta_salida="outputPaddle"):
     """
     Guarda un diccionario como archivo JSON.
 
@@ -78,6 +79,45 @@ def guardar_diccionario_json(diccionario, nombre_archivo="dorsales_y_tiempos.jso
         json.dump(diccionario, f, ensure_ascii=False, indent=4)
     print(f"\n✅ Diccionario guardado como JSON en: {ruta_completa}")
     return ruta_completa
+
+
+#Convertir de json a csv y guardarlo 
+def convertir_json_a_csv_en_directorio(directorio="outputJsonPaddle"):
+    """
+    Busca un archivo .json en el directorio, lo convierte a CSV 
+    y lo guarda en el mismo lugar con extensión .csv.
+
+    Parámetros:
+    - directorio: str — Carpeta donde buscar el JSON y guardar el CSV.
+
+    Retorna:
+    - ruta del archivo CSV creado, o None si no se encontró JSON.
+    """
+    # 1. Buscar archivo .json en el directorio
+    archivos = os.listdir(directorio)
+    archivo_json = next((f for f in archivos if f.endswith('.json')), None)
+
+    if not archivo_json:
+        print(f"❌ No se encontró ningún archivo .json en {directorio}")
+        return None
+
+    # 2. Rutas completas
+    ruta_json = os.path.join(directorio, archivo_json)
+    nombre_csv = os.path.splitext(archivo_json)[0] + ".csv"
+    ruta_csv = os.path.join(directorio, nombre_csv)
+
+    # 3. Leer JSON y guardar CSV
+    with open(ruta_json, 'r', encoding='utf-8') as f_json:
+        datos = json.load(f_json)
+
+    with open(ruta_csv, 'w', encoding='utf-8', newline='') as f_csv:
+        writer = csv.writer(f_csv)
+        writer.writerow(["Dorsal", "Tiempo"])
+        for dorsal, tiempo in datos.items():
+            writer.writerow([dorsal, tiempo])
+
+    print(f"✅ Convertido: {archivo_json} -> {nombre_csv}")
+    return ruta_csv
 
 if __name__ == "__main__":
     DEBUG = False
@@ -123,4 +163,6 @@ if __name__ == "__main__":
         print(f"{dorsal}: {tiempo}")
 
     guardar_diccionario_json(dorsal_to_time)
+    #Ahora convertimos json a csv y lo guardamos en el directorio 
+    convertir_json_a_csv_en_directorio()
 

@@ -1,0 +1,37 @@
+# 🐍 Archivos temporales de Python
+__pycache__/
+*.py[cod]
+*.so
+*.log
+*.tmp
+
+# 📦 Entorno virtual
+ambientePaddle/
+
+# 🤖 Modelos pesados (YOLO, redes neuronales)
+#*.pt
+*.pth
+*.weights
+
+# 📹 Videos y datos de entrada/salida pesados
+Videos3Corredores/
+fotosCapturadas/
+
+# 📄 Archivos de datos generados
+dorsales_y_tiempos.json
+*.csv
+
+# 💻 Archivos de sistema (Windows/macOS)
+.DS_Store
+Thumbs.db
+
+# 📦 Paquetes comprimidos o binarios
+*.zip
+*.tar
+*.tar.gz
+*.exe
+*.ipynb_checkpoints
+
+# 📁 Backups
+*~
+
