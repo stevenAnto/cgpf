@@ -1,3 +1,4 @@
+import argparse
 import cv2
 from ultralytics import YOLO
 from deep_sort_realtime.deepsort_tracker import DeepSort
@@ -12,8 +13,13 @@ tracker = DeepSort(max_age=60,n_init=10) #Si en 30 frames, no vuelve eliminarla 
 # Línea de meta (posición vertical en píxeles del frame)
 line_y = 550 #puedes ajustarla a donde esté tu meta
 
+# Parsear argumento del video
+parser = argparse.ArgumentParser()
+parser.add_argument("--video", required=True, help="Ruta al video a procesar")
+args = parser.parse_args()
+
 # Abrir el video (puede ser una cámara si usas 0)
-cap = cv2.VideoCapture('./Videos3Corredores/v14.mp4')
+cap = cv2.VideoCapture(args.video)
 
 # Conjunto para guardar los IDs de personas que ya cruzaron la meta
 ids_cruzaron = set()
