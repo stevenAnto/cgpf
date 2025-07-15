@@ -49,10 +49,11 @@ pip install -r requirements.txt
 
 ## ▶️ Ejecución
 
-Corre el script principal:
+Corre el script principal (acepta de argumento la ruta del video a analizar):
 
 ```bash
-python run_all.py
+python run_all.py --video <ruta_del_video>
+
 ```
 
 Este script hará lo siguiente:
