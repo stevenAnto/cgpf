@@ -82,7 +82,7 @@ def guardar_diccionario_json(diccionario, nombre_archivo="dorsales_y_tiempos.jso
 
 
 #Convertir de json a csv y guardarlo 
-def convertir_json_a_csv_en_directorio(directorio="outputJsonPaddle"):
+def convertir_json_a_csv_en_directorio(directorio="outputPaddle"):
     """
     Busca un archivo .json en el directorio, lo convierte a CSV 
     y lo guarda en el mismo lugar con extensión .csv.
