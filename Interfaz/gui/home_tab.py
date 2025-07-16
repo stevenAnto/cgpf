@@ -81,7 +81,3 @@ class HomeTab:
         """Inicio rápido - seleccionar video y ir a procesamiento"""
         # Navegar a la pestaña de procesamiento
         self.controller.navigate_to_tab(2)
-        
-        # Intentar seleccionar video automáticamente si la pestaña lo permite
-        if hasattr(self.controller.processing_tab, 'select_video'):
-            self.controller.processing_tab.select_video()

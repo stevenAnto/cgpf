@@ -77,7 +77,7 @@ def guardar_diccionario_json(diccionario, nombre_archivo="dorsales_y_tiempos.jso
     ruta_completa = os.path.join(carpeta_salida, nombre_archivo)
     with open(ruta_completa, 'w', encoding='utf-8') as f:
         json.dump(diccionario, f, ensure_ascii=False, indent=4)
-    print(f"\n✅ Diccionario guardado como JSON en: {ruta_completa}")
+    print(f"\nDiccionario guardado como JSON en: {ruta_completa}")
     return ruta_completa
 
 
@@ -98,7 +98,7 @@ def convertir_json_a_csv_en_directorio(directorio="outputPaddle"):
     archivo_json = next((f for f in archivos if f.endswith('.json')), None)
 
     if not archivo_json:
-        print(f"❌ No se encontró ningún archivo .json en {directorio}")
+        print(f"No se encontró ningún archivo .json en {directorio}")
         return None
 
     # 2. Rutas completas
@@ -116,7 +116,7 @@ def convertir_json_a_csv_en_directorio(directorio="outputPaddle"):
         for dorsal, tiempo in datos.items():
             writer.writerow([dorsal, tiempo])
 
-    print(f"✅ Convertido: {archivo_json} -> {nombre_csv}")
+    print(f"Convertido: {archivo_json} -> {nombre_csv}")
     return ruta_csv
 
 if __name__ == "__main__":
@@ -148,7 +148,7 @@ if __name__ == "__main__":
 
         result = read_dorsal(img, should_debug=False, should_paint=False, id=idx)
         
-        print(f"{filename} → {result['text']} (confianza: {result['accuracy']})")
+        print(f"{filename} -> {result['text']} (confianza: {result['accuracy']})")
 
         dorsal = result['text']
         tiempo = extract_time_from_filename(filename)
@@ -158,7 +158,7 @@ if __name__ == "__main__":
             dorsal_to_time[dorsal] = tiempo
 
 
-    print("\n📋 Diccionario dorsal → tiempo:")
+    print("\nDiccionario dorsal -> tiempo:")
     for dorsal, tiempo in dorsal_to_time.items():
         print(f"{dorsal}: {tiempo}")
 
