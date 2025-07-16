@@ -91,7 +91,7 @@ while True:
 
             # Recortar la imagen de la persona
             crop = frameOriginal[t:b, l:r]
-            filename = f"fotosCapturadas/persona_{track_id}_tiempo_{tiempo_seg:.2f}s.jpg".replace('.',':',1)
+            filename = f"fotosCapturadas/persona_{track_id}_tiempo_{tiempo_seg:.2f}s.jpg".replace('.','-',1)
 
             # Guardar la imagen con nombre único por ID
             cv2.imwrite(filename, crop)

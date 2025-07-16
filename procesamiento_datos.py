@@ -26,7 +26,7 @@ def procesar_datos(ruta_csv_entrada, ruta_salida=None):
         sys.exit(1)
 
     # 3. Procesamiento de datos
-    df_tiempos['Segundos'] = df_tiempos['Tiempo'].str.split(':').apply(
+    df_tiempos['Segundos'] = df_tiempos['Tiempo'].str.split('-').apply(
         lambda x: int(x[0])*60 + int(x[1])
     )
     df_tiempos = df_tiempos.sort_values('Segundos')
