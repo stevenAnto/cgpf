@@ -6,6 +6,7 @@ from gui.home_tab import HomeTab
 from gui.config_tab import ConfigTab
 from gui.processing_tab import ProcessingTab
 from gui.results_tab import ResultsTab
+from gui.analytics_tab import StatisticsTab  # ✅ Importación corregida
 from gui.about_tab import AboutTab
 from utils.styles import setup_styles
 
@@ -21,7 +22,8 @@ class CarrerasApp:
             'video_path': None,
             'processing': False,
             'resultados_data': [],
-            'config': {}
+            'config': {},
+            'project_results': {}  # ✅ Agregado para estadísticas por proyecto
         }
         
         # Configurar estilo
@@ -82,7 +84,8 @@ class CarrerasApp:
             ("⚙️ Configuración", lambda: self.navigate_to_tab(1)),
             ("🎬 Procesamiento", lambda: self.navigate_to_tab(2)),
             ("📊 Resultados", lambda: self.navigate_to_tab(3)),
-            ("ℹ️ Acerca de", lambda: self.navigate_to_tab(4))
+            ("📈 Estadísticas", lambda: self.navigate_to_tab(4)),  # ✅ Se añadió esta línea
+            ("ℹ️ Acerca de", lambda: self.navigate_to_tab(5))
         ]
         
         for text, command in nav_buttons:
@@ -95,64 +98,56 @@ class CarrerasApp:
     
     def create_tabs(self):
         """Crear todas las pestañas"""
-        # Instanciar todas las pestañas pasando self como controller
         self.home_tab = HomeTab(self.notebook, self)
         self.config_tab = ConfigTab(self.notebook, self)
         self.processing_tab = ProcessingTab(self.notebook, self)
         self.results_tab = ResultsTab(self.notebook, self)
+        self.statistics_tab = StatisticsTab(self.notebook, self)  # ✅ Añadido aquí
         self.about_tab = AboutTab(self.notebook, self)
         
-        # Agregar pestañas al notebook
         self.notebook.add(self.home_tab.frame, text="🏠 Inicio")
         self.notebook.add(self.config_tab.frame, text="⚙️ Configuración")
         self.notebook.add(self.processing_tab.frame, text="🎬 Procesamiento")
         self.notebook.add(self.results_tab.frame, text="📊 Resultados")
+        self.notebook.add(self.statistics_tab.frame, text="📈 Estadísticas")  # ✅ Pestaña visible
         self.notebook.add(self.about_tab.frame, text="ℹ️ Acerca de")
     
     # Métodos para manejo de estado compartido
     def get_shared_state(self, key=None):
-        """Obtener estado compartido"""
         if key:
             return self.shared_state.get(key)
         return self.shared_state
     
     def set_shared_state(self, key, value):
-        """Establecer estado compartido y notificar cambios"""
         self.shared_state[key] = value
         self.notify_state_change(key, value)
     
     def notify_state_change(self, key, value):
-        """Notificar a pestañas sobre cambios de estado"""
         if key == 'video_path':
-            # Notificar a processing_tab que hay nuevo video
             if hasattr(self.processing_tab, 'on_video_changed'):
                 self.processing_tab.on_video_changed(value)
         
         if key == 'resultados_data':
-            # Notificar a results_tab que hay nuevos datos
             if hasattr(self.results_tab, 'on_data_changed'):
                 self.results_tab.on_data_changed(value)
+        
+        if key == 'project_results':
+            if hasattr(self.statistics_tab, 'on_project_list_update'):
+                self.statistics_tab.on_project_list_update(value)
     
     def navigate_to_tab(self, tab_index):
-        """Navegar a una pestaña específica"""
         self.notebook.select(tab_index)
     
     def quick_start(self):
-        """Inicio rápido - seleccionar video y ir a procesamiento"""
-        # Navegar a procesamiento y permitir que maneje la selección
         self.navigate_to_tab(2)
-        
-        # Intentar seleccionar video si el método existe
         if hasattr(self.processing_tab, 'select_video'):
             return self.processing_tab.select_video()
         return False
     
     def run(self):
-        """Ejecutar la aplicación"""
         self.root.mainloop()
 
 def python_version():
-    """Obtener versión de Python"""
     return f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
 
 if __name__ == "__main__":

@@ -1,4 +1,3 @@
-# gui/home_tab.py - Basado en funcionalidad existente
 import tkinter as tk
 from tkinter import ttk
 from utils.styles import COLORS
@@ -28,37 +27,45 @@ class HomeTab:
         # Cards de acciones rápidas
         cards_frame = tk.Frame(main_content)
         cards_frame.pack(expand=True, fill="both")
-        
-        # Grid de cards
-        cards_frame.grid_rowconfigure(0, weight=1)
-        cards_frame.grid_rowconfigure(1, weight=1)
-        cards_frame.grid_columnconfigure(0, weight=1)
-        cards_frame.grid_columnconfigure(1, weight=1)
-        
+
+        # Configurar grid: 2 filas × 3 columnas
+        for i in range(2):
+            cards_frame.grid_rowconfigure(i, weight=1)
+        for j in range(3):
+            cards_frame.grid_columnconfigure(j, weight=1)
+
         # Card 1: Nuevo Proyecto
         card1 = self.create_card(cards_frame, "🎬 Cargar Nuevo Video", 
                                 "Cargar video y comenzar procesamiento",
                                 self.quick_start)
         card1.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-        
+
         # Card 2: Ver Resultados
         card2 = self.create_card(cards_frame, "📊 Ver Resultados", 
                                 "Revisar rankings anteriores",
                                 lambda: self.controller.navigate_to_tab(3))
         card2.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
-        
+
         # Card 3: Configuración
         card3 = self.create_card(cards_frame, "⚙️ Configuración", 
                                 "Ajustar parámetros del sistema",
                                 lambda: self.controller.navigate_to_tab(1))
-        card3.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-        
-        # Card 4: Acerca de
-        card4 = self.create_card(cards_frame, "ℹ️ Acerca de", 
+        card3.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+
+        # Card 4: Estadísticas
+        card4 = self.create_card(cards_frame, "📈 Estadísticas", 
+                                "Análisis y métricas generales del evento",
+                                lambda: self.controller.navigate_to_tab(4)) 
+        card4.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        # Card 5: Acerca de
+        card5 = self.create_card(cards_frame, "ℹ️ Acerca de", 
                                 "Información del sistema",
-                                lambda: self.controller.navigate_to_tab(4))
-        card4.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
-    
+                                lambda: self.controller.navigate_to_tab(5))
+        card5.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+
+        # (col=2, row=1 queda vacío, puedes agregar otro card futuro o dejarlo limpio)
+
     def create_card(self, parent, title, description, command):
         """Crear card de acción"""
         card = tk.Frame(parent, bg="white", relief="raised", bd=2)
@@ -79,5 +86,4 @@ class HomeTab:
     
     def quick_start(self):
         """Inicio rápido - seleccionar video y ir a procesamiento"""
-        # Navegar a la pestaña de procesamiento
         self.controller.navigate_to_tab(2)
