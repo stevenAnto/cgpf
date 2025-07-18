@@ -1,8 +1,6 @@
-# gui/about_tab.py
 import tkinter as tk
 from tkinter import ttk
-import platform
-import sys
+from gui.about.about_utils import get_about_description, get_system_info
 
 class AboutTab:
     def __init__(self, notebook, controller=None):
@@ -12,9 +10,6 @@ class AboutTab:
         self.create_about_tab()
     
     def create_about_tab(self):
-        """Pestaña Acerca de - diseño simplificado"""
-
-        # Encabezado
         header = tk.Frame(self.frame, bg="#2C3E50", height=120)
         header.pack(fill="x")
         header.pack_propagate(False)
@@ -24,35 +19,18 @@ class AboutTab:
         tk.Label(header, text="Versión 2.0 - YOLO + OpenCV",
                  bg="#2C3E50", fg="#BDC3C7", font=("Arial", 12)).pack()
         
-        # Contenido principal
         content = tk.Frame(self.frame)
         content.pack(expand=True, fill="both", padx=40, pady=40)
         
-        info_text = """
-Este sistema usa inteligencia artificial para analizar videos de carreras, 
-detectando corredores y generando rankings automáticos.
-
-Características:
-• Detección con YOLOv8
-• Seguimiento en tiempo real
-• Reconocimiento de dorsales
-• Exportación de resultados
-
-Tecnologías:
-• Python 3.8+
-• OpenCV, EasyOCR
-• Docker, Tkinter
-        """
-        
-        tk.Label(content, text=info_text, justify="left",
+        tk.Label(content, text=get_about_description(), justify="left",
                  font=("Arial", 11), wraplength=800).pack(pady=20)
         
-        # Información del sistema
-        sys_info = f"""
+        sys_info = get_system_info()
+        sys_text = f"""
 Sistema:
-• SO: {platform.system()} {platform.release()}
-• Arquitectura: {platform.machine()}
-• Python: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}
+• SO: {sys_info["os"]}
+• Arquitectura: {sys_info["arch"]}
+• Python: {sys_info["python_version"]}
         """
-        tk.Label(content, text=sys_info, justify="left",
+        tk.Label(content, text=sys_text, justify="left",
                  font=("Arial", 10), fg="#555").pack(pady=10)
