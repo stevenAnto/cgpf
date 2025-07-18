@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-from utils.styles import COLORS
 
 class HomeTab:
     def __init__(self, parent, controller):

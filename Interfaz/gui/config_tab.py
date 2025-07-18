@@ -2,7 +2,7 @@
 # gui/config_tab.py - Basado en funcionalidad existente
 import tkinter as tk
 from tkinter import ttk
-from utils.styles import COLORS
+
 
 class ConfigTab:
     def __init__(self, parent, controller):

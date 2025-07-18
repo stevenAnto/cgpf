@@ -1,9 +1,10 @@
 # gui/results_tab.py
+import os
+import csv
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
-import csv
-import os
-from utils.styles import COLORS
+from gui.report.generate_report import ReportGenerator
+from tkinter import filedialog
 
 class ResultsTab:
     def __init__(self, parent, controller):
@@ -15,28 +16,29 @@ class ResultsTab:
         self.frame = ttk.Frame(self.parent)
         self.frame.bind("<Visibility>", self.on_tab_visible)
 
-
-        # Panel de selección de archivo CSV
+        # Panel de selección de proyecto (.csv)
         file_panel = tk.Frame(self.frame, bg="#ECF0F1")
         file_panel.pack(fill="x", padx=20, pady=10)
 
         tk.Label(file_panel, text="Proyectos:", bg="#ECF0F1").pack(side="left", padx=5)
-        # Frame para Listbox con Scrollbar
         listbox_frame = tk.Frame(file_panel)
         listbox_frame.pack(side="left", fill="both", expand=True, padx=10)
 
         scrollbar = tk.Scrollbar(listbox_frame, orient="vertical")
         scrollbar.pack(side="right", fill="y")
-
-        self.csv_selector = tk.Listbox(listbox_frame, height=5, exportselection=False, yscrollcommand=scrollbar.set)
+        self.csv_selector = tk.Listbox(
+            listbox_frame, height=5, exportselection=False,
+            yscrollcommand=scrollbar.set
+        )
         self.csv_selector.pack(side="left", fill="both", expand=True)
-
         scrollbar.config(command=self.csv_selector.yview)
-
         self.csv_selector.bind("<<ListboxSelect>>", self.on_csv_selected)
 
-        tk.Button(file_panel, text="🔄 Recargar", command=self.load_result_files,
-                  bg="#2980B9", fg="white", bd=0, pady=5, activebackground="#2471A3", cursor="hand2").pack(side="left", padx=10)
+        tk.Button(
+            file_panel, text="🔄 Recargar", command=self.load_result_files,
+            bg="#2980B9", fg="white", bd=0, pady=5,
+            activebackground="#2471A3", cursor="hand2"
+        ).pack(side="left", padx=10)
 
         # Panel de filtros
         filter_panel = tk.Frame(self.frame, bg="#ECF0F1")
@@ -47,144 +49,150 @@ class ResultsTab:
         self.categoria_filter.set("Todos")
         self.categoria_filter.pack(side="left", padx=5)
 
-        tk.Button(filter_panel, text="Aplicar Filtros", command=self.apply_filters,
-                  bg="#3498DB", fg="white", bd=0, pady=5, activebackground="#2980B9", cursor="hand2").pack(side="left", padx=10)
+        tk.Button(
+            filter_panel, text="Aplicar Filtros", command=self.apply_filters,
+            bg="#3498DB", fg="white", bd=0, pady=5,
+            activebackground="#2980B9", cursor="hand2"
+        ).pack(side="left", padx=10)
 
         # Tabla de resultados
         table_frame = tk.Frame(self.frame)
         table_frame.pack(expand=True, fill="both", padx=20, pady=20)
 
         columns = ("Posición", "Dorsal", "Tiempo", "Nombre", "Categoria")
-        self.results_tree = ttk.Treeview(table_frame, columns=columns, show="headings", height=15)
-
+        self.results_tree = ttk.Treeview(
+            table_frame, columns=columns, show="headings", height=15
+        )
         for col in columns:
             self.results_tree.heading(col, text=col)
             self.results_tree.column(col, width=100)
-
-        v_scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=self.results_tree.yview)
-        
-        self.results_tree.configure(yscrollcommand=v_scrollbar.set)
-
+        v_scroll = ttk.Scrollbar(table_frame, orient="vertical", command=self.results_tree.yview)
+        self.results_tree.configure(yscrollcommand=v_scroll.set)
         self.results_tree.pack(side="left", expand=True, fill="both")
-        v_scrollbar.pack(side="right", fill="y")
-        
+        v_scroll.pack(side="right", fill="y")
 
-        # Panel de acciones
+        # Panel de acciones con botón centrado
         action_panel = tk.Frame(self.frame)
         action_panel.pack(fill="x", padx=20, pady=20)
+        self.report_button = tk.Button(
+            action_panel,
+            text="📝 Generar Informe",
+            command=self.on_generate_report,
+            bg="#27AE60", fg="white", font=("Arial", 10, "bold"),
+            bd=0, pady=10, activebackground="#229954", cursor="hand2"
+        )
+        self.report_button.pack(anchor="center")
 
-        tk.Button(action_panel, text="💾 Exportar CSV", command=self.export_csv,
-                  bg="#27AE60", fg="white", font=("Arial", 10, "bold"),
-                  bd=0, pady=10, activebackground="#229954", cursor="hand2").pack(side="left", padx=10)
-
-
+        # Estado interno
         self.resultados_data = []
         self.resultados_archivos = []
         self.load_result_files()
 
     def on_tab_visible(self, event):
-        # Solo recarga si el tab se vuelve visible
         if event.widget == self.frame:
             self.load_result_files()
 
     def load_result_files(self):
-        resultados_folder = "./resultados"
+        folder = "./resultados"
         self.csv_selector.delete(0, "end")
         self.resultados_archivos.clear()
-
-        if not os.path.exists(resultados_folder):
-            os.makedirs(resultados_folder)
-
-        archivos = [f for f in os.listdir(resultados_folder) if f.endswith(".csv")]
-        archivos.sort(key=lambda f: os.path.getmtime(os.path.join(resultados_folder, f)), reverse=True)
-
-        for archivo in archivos:
-            nombre = os.path.splitext(archivo)[0]
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+        archivos = [
+            f for f in os.listdir(folder)
+            if f.lower().endswith(".csv")
+        ]
+        archivos.sort(
+            key=lambda f: os.path.getmtime(os.path.join(folder, f)),
+            reverse=True
+        )
+        for f in archivos:
+            nombre = os.path.splitext(f)[0]
             self.csv_selector.insert("end", nombre)
-            self.resultados_archivos.append(os.path.join(resultados_folder, archivo))
-
-        # Mostrar el más reciente automáticamente
+            self.resultados_archivos.append(os.path.join(folder, f))
         if self.resultados_archivos:
             self.csv_selector.select_set(0)
             self.on_csv_selected(None)
 
-
     def on_csv_selected(self, event):
-        selected_idx = self.csv_selector.curselection()
-        if not selected_idx:
+        idx = self.csv_selector.curselection()
+        if not idx:
             return
-
-        selected_path = self.resultados_archivos[selected_idx[0]]
+        path = self.resultados_archivos[idx[0]]
         self.resultados_data.clear()
-
         try:
-            with open(selected_path, newline='', encoding='utf-8') as f:
+            with open(path, newline='', encoding='utf-8') as f:
                 reader = csv.DictReader(f)
                 for row in reader:
                     self.resultados_data.append(row)
-
-            categorias = set(r.get("Categoria", "") for r in self.resultados_data if r.get("Categoria"))
-            self.categoria_filter["values"] = ["Todos"] + sorted(categorias)
+            cats = sorted({
+                r.get("Categoria", "")
+                for r in self.resultados_data
+                if r.get("Categoria")
+            })
+            self.categoria_filter["values"] = ["Todos"] + cats
             self.categoria_filter.set("Todos")
-
+            self.update_results_table()
         except Exception as e:
-            messagebox.showerror("Error", f"No se pudo leer el archivo:\n{str(e)}")
-            return
-
-        self.update_results_table()
+            messagebox.showerror("Error", f"No se pudo leer:\n{e}")
 
     def update_results_table(self):
-        for item in self.results_tree.get_children():
-            self.results_tree.delete(item)
-
-        for idx, resultado in enumerate(self.resultados_data, start=1):
-            values = (
-                idx,
-                resultado.get("Dorsal", ""),
-                resultado.get("Tiempo", ""),
-                resultado.get("Nombre", ""),
-                resultado.get("Categoria", "")
+        for i in self.results_tree.get_children():
+            self.results_tree.delete(i)
+        for i, r in enumerate(self.resultados_data, start=1):
+            self.results_tree.insert(
+                "", "end",
+                values=(
+                    i,
+                    r.get("Dorsal",""),
+                    r.get("Tiempo",""),
+                    r.get("Nombre",""),
+                    r.get("Categoria","")
+                )
             )
-            self.results_tree.insert("", "end", values=values)
 
     def apply_filters(self):
-        categoria = self.categoria_filter.get()
-
-        for item in self.results_tree.get_children():
-            self.results_tree.delete(item)
-
-        for idx, resultado in enumerate(self.resultados_data, start=1):
-            if categoria != "Todos" and resultado.get("Categoria") != categoria:
+        cat = self.categoria_filter.get()
+        for i in self.results_tree.get_children():
+            self.results_tree.delete(i)
+        for idx, r in enumerate(self.resultados_data, start=1):
+            if cat != "Todos" and r.get("Categoria") != cat:
                 continue
-            values = (
-                idx,
-                resultado.get("Dorsal", ""),
-                resultado.get("Tiempo", ""),
-                resultado.get("Nombre", ""),
-                resultado.get("Categoria", "")
+            self.results_tree.insert(
+                "", "end",
+                values=(
+                    idx,
+                    r.get("Dorsal",""),
+                    r.get("Tiempo",""),
+                    r.get("Nombre",""),
+                    r.get("Categoria","")
+                )
             )
-            self.results_tree.insert("", "end", values=values)
 
-    def export_csv(self):
-        if not self.resultados_data:
-            messagebox.showwarning("Advertencia", "No hay datos para exportar")
+    def on_generate_report(self):
+        idx = self.csv_selector.curselection()
+        if not idx:
+            messagebox.showwarning("Selecciona un proyecto", "Primero elige un proyecto")
             return
-
-        filename = filedialog.asksaveasfilename(
-            defaultextension=".csv",
-            filetypes=[("CSV files", "*.csv"), ("Todos los archivos", "*.*")],
-            title="Guardar resultados como CSV"
+        csv_path = self.resultados_archivos[idx[0]]
+        # Solicitar carpeta de destino
+        dest_folder = filedialog.askdirectory(
+            title="Selecciona carpeta de destino"
         )
+        if not dest_folder:
+            return
+        nombre_proyecto = os.path.splitext(os.path.basename(csv_path))[0]
+        output_pdf = os.path.join(dest_folder, f"{nombre_proyecto}_informe.pdf")
 
-        if filename:
-            try:
-                with open(filename, 'w', newline='', encoding='utf-8') as file:
-                    writer = csv.DictWriter(file, fieldnames=self.resultados_data[0].keys())
-                    writer.writeheader()
-                    writer.writerows(self.resultados_data)
-                messagebox.showinfo("Éxito", f"Resultados exportados a:\n{filename}")
-            except Exception as e:
-                messagebox.showerror("Error", f"Error al exportar: {str(e)}")
+        try:
+            rg = ReportGenerator()
+            rg.generate_report(csv_path, output_pdf)
+            messagebox.showinfo(
+                "Informe generado",
+                f"PDF guardado en:\n{output_pdf}"
+            )
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo generar el informe:\n{e}")
 
     def on_data_changed(self, data):
         self.resultados_data = data
