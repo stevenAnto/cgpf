@@ -14,8 +14,6 @@ ambientePaddle/
 *.weights
 
 # 📹 Videos y datos de entrada/salida pesados
-Videos3Corredores/
-fotosCapturadas/
 
 # 📄 Archivos de datos generados
 dorsales_y_tiempos.json
