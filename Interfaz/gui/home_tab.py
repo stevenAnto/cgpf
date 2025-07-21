@@ -42,25 +42,20 @@ class HomeTab:
         # Card 2: Ver Resultados
         card2 = self.create_card(cards_frame, "📊 Ver Resultados", 
                                 "Revisar rankings anteriores",
-                                lambda: self.controller.navigate_to_tab(3))
+                                lambda: self.controller.navigate_to_tab(2))
         card2.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
 
-        # Card 3: Configuración
-        card3 = self.create_card(cards_frame, "⚙️ Configuración", 
-                                "Ajustar parámetros del sistema",
-                                lambda: self.controller.navigate_to_tab(1))
-        card3.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
 
         # Card 4: Estadísticas
         card4 = self.create_card(cards_frame, "📈 Estadísticas", 
                                 "Análisis y métricas generales del evento",
-                                lambda: self.controller.navigate_to_tab(4)) 
+                                lambda: self.controller.navigate_to_tab(3)) 
         card4.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
         # Card 5: Acerca de
         card5 = self.create_card(cards_frame, "ℹ️ Acerca de", 
                                 "Información del sistema",
-                                lambda: self.controller.navigate_to_tab(5))
+                                lambda: self.controller.navigate_to_tab(4))
         card5.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
 
         # (col=2, row=1 queda vacío, puedes agregar otro card futuro o dejarlo limpio)
@@ -85,4 +80,4 @@ class HomeTab:
     
     def quick_start(self):
         """Inicio rápido - seleccionar video y ir a procesamiento"""
-        self.controller.navigate_to_tab(2)
+        self.controller.navigate_to_tab(1)

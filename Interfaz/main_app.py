@@ -22,7 +22,6 @@ class CarrerasApp:
             'video_path': None,
             'processing': False,
             'resultados_data': [],
-            'config': {},
             'project_results': {}  # ✅ Agregado para estadísticas por proyecto
         }
         
@@ -81,11 +80,10 @@ class CarrerasApp:
         """Crear botones de navegación lateral"""
         nav_buttons = [
             ("🏠 Inicio", lambda: self.navigate_to_tab(0)),
-            ("⚙️ Configuración", lambda: self.navigate_to_tab(1)),
-            ("🎬 Procesamiento", lambda: self.navigate_to_tab(2)),
-            ("📊 Resultados", lambda: self.navigate_to_tab(3)),
-            ("📈 Estadísticas", lambda: self.navigate_to_tab(4)),  # ✅ Se añadió esta línea
-            ("ℹ️ Acerca de", lambda: self.navigate_to_tab(5))
+            ("🎬 Procesamiento", lambda: self.navigate_to_tab(1)),
+            ("📊 Resultados", lambda: self.navigate_to_tab(2)),
+            ("📈 Estadísticas", lambda: self.navigate_to_tab(3)),  # ✅ Se añadió esta línea
+            ("ℹ️ Acerca de", lambda: self.navigate_to_tab(4))
         ]
         
         for text, command in nav_buttons:
@@ -99,14 +97,12 @@ class CarrerasApp:
     def create_tabs(self):
         """Crear todas las pestañas"""
         self.home_tab = HomeTab(self.notebook, self)
-        self.config_tab = ConfigTab(self.notebook, self)
         self.processing_tab = ProcessingTab(self.notebook, self)
         self.results_tab = ResultsTab(self.notebook, self)
         self.statistics_tab = StatisticsTab(self.notebook, self)  # ✅ Añadido aquí
         self.about_tab = AboutTab(self.notebook, self)
         
         self.notebook.add(self.home_tab.frame, text="🏠 Inicio")
-        self.notebook.add(self.config_tab.frame, text="⚙️ Configuración")
         self.notebook.add(self.processing_tab.frame, text="🎬 Procesamiento")
         self.notebook.add(self.results_tab.frame, text="📊 Resultados")
         self.notebook.add(self.statistics_tab.frame, text="📈 Estadísticas")  # ✅ Pestaña visible
