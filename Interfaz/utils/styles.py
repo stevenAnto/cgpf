@@ -11,10 +11,11 @@ def setup_styles():
     style.configure('Custom.TNotebook.Tab', padding=[20, 10])
     
     # Estilo para botones principales
-    style.configure('Action.TButton', font=('Arial', 10, 'bold'))
-    style.configure('Success.TButton', foreground='white', background='#27AE60')
-    style.configure('Warning.TButton', foreground='white', background='#F39C12')
-    style.configure('Danger.TButton', foreground='white', background='#E74C3C')
+    style.configure('Success.TButton', foreground='white', background='#27AE60', padding=(20, 10))
+    style.configure('Warning.TButton', foreground='white', background='#F39C12', padding=(12, 6))
+    style.configure('Danger.TButton', foreground='white', background='#E74C3C', padding=(12, 6))
+    style.configure('Action.TButton', font=('Arial', 10, 'bold'), padding=(12, 6))
+
     
     # Estilo para frames
     style.configure('Card.TFrame', relief='raised', borderwidth=2)
@@ -54,7 +55,8 @@ BUTTON_STYLES = {
         'activeforeground': COLORS['white'],
         'font': ('Arial', 10, 'bold'),
         'bd': 0,
-        'cursor': 'hand2'
+        'cursor': 'hand2',
+        'pady': 8 
     },
     'warning': {
         'bg': COLORS['warning'],

@@ -4,8 +4,8 @@ from tkinter import ttk, messagebox
 import sys
 from gui.home_tab import HomeTab
 from gui.config_tab import ConfigTab
-from gui.processing_tab import ProcessingTab
-from gui.results_tab import ResultsTab
+from gui.processing.processing_tab import ProcessingTab
+from gui.results.results_tab import ResultsTab
 from gui.analytics.analytics_tab import StatisticsTab  # ✅ Importación corregida
 from gui.about.about_tab import AboutTab
 from utils.styles import setup_styles
